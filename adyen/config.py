@@ -6,6 +6,10 @@ if django.VERSION < (1, 7):
 else:
     from django.utils.module_loading import import_string
 
+# Defines the accepted algorithms. Subclasses should verify that values for ADYEN_HMAC_ALGORITHM
+# are contained in this list.
+HMAC_ALGORITHMS = ('SHA1', 'SHA256')
+
 
 def get_config():
     """
@@ -37,4 +41,7 @@ class AbstractAdyenConfig:
         raise NotImplementedError
 
     def get_ip_address_header(self):
+        raise NotImplementedError
+
+    def get_hmac_algorithm(self, request):
         raise NotImplementedError

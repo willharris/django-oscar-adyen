@@ -2,8 +2,8 @@ from django.test import TestCase
 from django.test.utils import override_settings
 
 from adyen.facade import Facade
-from adyen.gateway import PaymentNotification, Constants, MissingFieldException, \
-    UnexpectedFieldException
+from adyen.gateway import (BasePaymentNotification, Constants, MissingFieldException,
+                           UnexpectedFieldException)
 from tests import MockRequest
 
 
@@ -70,14 +70,14 @@ class PaymentNotificationTestCase(TestCase):
     def create_mock_notification(self, required=True, optional=False, additional=False):
         keys_to_set = []
         if required:
-            keys_to_set += PaymentNotification.REQUIRED_FIELDS
+            keys_to_set += BasePaymentNotification.REQUIRED_FIELDS
         if optional:
-            keys_to_set += PaymentNotification.OPTIONAL_FIELDS
+            keys_to_set += BasePaymentNotification.OPTIONAL_FIELDS
         if additional:
             keys_to_set += [Constants.ADDITIONAL_DATA_PREFIX + 'foo']
         params = {key: 'FOO' for key in keys_to_set}
 
-        return PaymentNotification(MockClient(), params)
+        return BasePaymentNotification(MockClient(), params)
 
     def test_required_fields_are_required(self):
         notification = self.create_mock_notification(
